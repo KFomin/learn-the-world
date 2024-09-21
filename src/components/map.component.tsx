@@ -6,26 +6,43 @@ import {Map, View} from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import {fromLonLat} from "ol/proj";
+import {defaults as defaultInteractions} from "ol/interaction";
+import {Coordinate} from "ol/coordinate";
 
 const MapComponent: React.FC = () => {
     useEffect(() => {
-        const map = new Map({
-            target: 'map',
-            layers: [
-                new TileLayer({
-                    source: new OSM(),
-                }),
-            ],
-            view: new View({
+            const mapView = new View({
                 center: fromLonLat([24.7536, 59.4370]),
                 zoom: 6,
                 minZoom: 6,
                 maxZoom: 8,
-            }),
-        });
+            });
+            const map = new Map({
+                    target: 'map',
+                    layers: [
+                        new TileLayer({
+                            source: new OSM(),
+                        }),
+                    ],
+                    view: mapView,
+                    interactions: defaultInteractions({dragPan: false, pinchZoom: false}),
+                })
+            ;
 
-        return () => map.setTarget('map');
-    }, []);
+            const goToCoordinates = (coordinate: Coordinate) => {
+                mapView.animate({
+                    center: coordinate,
+                    duration: 500, // Длительность анимации в миллисекундах
+                });
+            };
+
+            map.on('singleclick', (event) => {
+                goToCoordinates(event.coordinate);
+            });
+
+            return () => map.setTarget('map');
+        },
+        []);
 
     return view;
 };
