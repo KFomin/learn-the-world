@@ -30,6 +30,11 @@ const MapComponent: React.FC = () => {
     return view;
 };
 
-const view = <div tabIndex={0} id="map" style={{width: '100vw', height: '100vh'}}/>;
+const view =
+    <div id="map" className="w-screen h-screen">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10">
+            <div className="w-4 h-4 bg-transparent border-2 border-red-500 rounded-full"></div>
+        </div>
+    </div>
 
 export default MapComponent;
